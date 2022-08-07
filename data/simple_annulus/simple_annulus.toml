@@ -1,0 +1,38 @@
+[hub]
+type = "csv"
+delimiter = " "
+file = "hub.csv"
+
+[shroud]
+type = "csv"
+delimiter = " "
+file = "shroud.csv"
+
+#origin = [0, 0, 0]
+#rotation_axis = [0, 0, 1]
+#units
+
+[[rows]]
+name = "annulus"
+#bladed = false
+passages = 12
+
+# [rotation_speed]
+# type = "RPM"
+# value = -17188
+
+
+# [rows.mesh]
+# topology = "bladeless"
+
+[rows.mesh.axial]
+points = 20
+clustering = "equidistant"
+
+[rows.mesh.radial]
+points = 20
+clustering = "equidistant"
+
+[rows.mesh.axial]
+points = 20
+clustering = "equidistant"

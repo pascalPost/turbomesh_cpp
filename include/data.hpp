@@ -3,36 +3,62 @@
 
 #pragma once
 
-#include <tuple>
+#include "geometric_types.hpp"
+#include <optional>
+#include <string>
 #include <variant>
 #include <vector>
 
 namespace turbomesh
 {
 
-struct vector3d : std::tuple<double, double, double>
+struct csv_file_t
 {
+  std::string name;
+  char delimiter;
 };
 
-struct cartesian_vector3d : vector3d
+struct edge_grid_parameter_t
 {
+  unsigned nPoint;
+  // add variant of clustering
 };
 
-struct cylindrical_vector3d : vector3d
+struct blade_section_t
 {
+  std::vector<vector3d_var> suction_side_points;
+  std::vector<vector3d_var> pressure_side_points;
 };
 
-using vector3d_var = std::variant<cartesian_vector3d, cylindrical_vector3d>;
-
-struct blade_section
+struct blade_t
 {
-  std::vector<vector3d_var> suction_side;
-  std::vector<vector3d_var> pressure_side;
+  std::vector<blade_section_t> blade_sections;
 };
 
-struct blade
+struct row_t
 {
-  std::vector<blade_section> sections;
+  std::string name;
+  unsigned nPassage;
+  std::optional<blade_t> blade_opt;
+};
+
+struct hub_shroud_t
+{
+  csv_file_t csv_file;
+  std::vector<cylindrical_vector3d> points;
+};
+
+struct geometry_t
+{
+  hub_shroud_t hub;
+  hub_shroud_t shroud;
+  std::vector<row_t> rows;
+};
+
+/// main data structure containing all turbomesh data
+struct data_t
+{
+  geometry_t geometry;
 };
 
 } // namespace turbomesh

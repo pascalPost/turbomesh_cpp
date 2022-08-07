@@ -1,3 +1,6 @@
+# Copyright (c) Pascal Post. All Rights Reserved.
+# Licensed under AGPLv3 license (see LICENSE.txt for details)
+
 include(FetchContent)
 
 FetchContent_Declare(
