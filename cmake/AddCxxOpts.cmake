@@ -14,5 +14,3 @@ set(CXXOPTS_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(CXXOPTS_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
 set(CXXOPTS_ENABLE_WARNINGS OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(cxxopts)
-
-target_link_libraries(turbomesh PUBLIC cxxopts)

@@ -13,5 +13,3 @@ FetchContent_Declare(
 #set(CMAKE_PROJECT_toml11_INCLUDE_BEFORE "${CMAKE_SOURCE_DIR}/cmake/CMP0077PolicyFix.cmake")
 set(toml11_BUILD_TEST OFF)
 FetchContent_MakeAvailable(toml11)
-
-target_link_libraries(turbomesh PUBLIC toml11::toml11)

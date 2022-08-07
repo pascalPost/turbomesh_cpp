@@ -17,7 +17,14 @@ struct csv_data_t
   std::vector<std::vector<double>> data;
 };
 
+/// reads a csv file
 csv_data_t
-read_csv_data(const std::string& file_name, const char delimiter);
+read_csv_data( const std::string& file_name, const char delimiter );
+
+/// parses a csv istream
+csv_data_t
+read_csv_data( std::istream& file_contents,
+               const char delimiter,
+               const std::string& file_name = {} );
 
 } // namespace turbomesh
