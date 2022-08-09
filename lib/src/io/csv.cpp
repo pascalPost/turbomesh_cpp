@@ -3,6 +3,7 @@
 
 #include "../../include/io/csv.hpp"
 #include "../../include/error.hpp"
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -111,6 +112,12 @@ read_csv_data( std::istream& file_contents,
 csv_data_t
 read_csv_data( const std::string& file_name, const char delimiter )
 {
+  // check if file exists
+  if ( !std::filesystem::exists( file_name ) )
+  {
+    error( "Requested file " + file_name + " does not exist." );
+  }
+
   std::ifstream file( file_name );
   return read_csv_data( file, delimiter, file_name );
 }

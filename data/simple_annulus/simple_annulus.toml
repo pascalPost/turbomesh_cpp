@@ -14,7 +14,6 @@ file = "shroud.csv"
 
 [[rows]]
 name = "annulus"
-#bladed = false
 passages = 12
 
 # [rotation_speed]
@@ -33,6 +32,6 @@ clustering = "equidistant"
 points = 20
 clustering = "equidistant"
 
-[rows.mesh.axial]
+[rows.mesh.azimuth]
 points = 20
 clustering = "equidistant"
