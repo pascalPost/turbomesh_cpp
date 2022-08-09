@@ -74,6 +74,12 @@ read_csv_data( std::istream& file_contents,
   std::string row;
   while ( std::getline( file_contents, row ) )
   {
+    // ignore empty lines
+    if ( row.empty() )
+    {
+      continue;
+    }
+
     const auto tokens = tokenize( row, delimiter );
 
     if ( tokens.size() != column_names.size() )
