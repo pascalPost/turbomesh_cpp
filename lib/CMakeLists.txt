@@ -2,8 +2,8 @@
 # Licensed under AGPLv3 license (see LICENSE.txt for details)
 
 add_library(turbomesh SHARED
-  src/io/toml.cpp
-  src/io/csv.cpp
+  src/turbomesh/io/toml.cpp
+  src/turbomesh/io/csv.cpp
   )
 
 include(../cmake/AddToml11.cmake)

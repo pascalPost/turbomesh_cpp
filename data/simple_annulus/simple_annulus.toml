@@ -24,6 +24,9 @@ passages = 12
 # [rows.mesh]
 # topology = "bladeless"
 
+[rows.mesh]
+topology = "single_block"
+
 [rows.mesh.axial]
 points = 20
 clustering = "equidistant"

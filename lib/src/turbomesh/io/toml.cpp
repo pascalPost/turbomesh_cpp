@@ -5,11 +5,82 @@
 #include "../../include/error.hpp"
 #include "../../include/io/csv.hpp"
 #include "toml/value.hpp"
+#include <algorithm>
 #include <filesystem>
 #include <toml.hpp>
 
 namespace turbomesh
 {
+
+template<typename C,
+         template<typename...>
+         class M,
+         template<typename...>
+         class V>
+edge_clustering_t
+read_edge_clustering( const toml::basic_value<C, M, V>& toml_row_mesh_table,
+                      const toml::key& key )
+{
+  const toml::basic_value<C, M, V>& toml_table =
+    toml::find<toml::table>( toml_row_mesh_table, key );
+
+  const auto nPoint = toml::find<unsigned>( toml_table, "points" );
+  const auto clustering_str =
+    toml::find<std::string>( toml_table, "clustering" );
+
+  if ( clustering_str != "equidistant" )
+  {
+    error( "Only equidistant clustering supported for now." );
+  }
+
+  equidistant_clustering_t clustering{};
+
+  return { nPoint, std::move( clustering ) };
+}
+
+template<typename C,
+         template<typename...>
+         class M,
+         template<typename...>
+         class V>
+single_block_topology_t
+read_single_block_topology(
+  const toml::basic_value<C, M, V>& toml_table_row_mesh )
+{
+  auto axial_edge_clustering =
+    read_edge_clustering( toml_table_row_mesh, "axial" );
+  auto radial_edge_clustering =
+    read_edge_clustering( toml_table_row_mesh, "radial" );
+  auto azimuth_edge_clustering =
+    read_edge_clustering( toml_table_row_mesh, "azimuth" );
+
+  return { std::move( axial_edge_clustering ),
+           std::move( radial_edge_clustering ),
+           std::move( azimuth_edge_clustering ) };
+}
+
+template<typename C,
+         template<typename...>
+         class M,
+         template<typename...>
+         class V>
+topology_t
+read_mesh( const toml::basic_value<C, M, V>& toml_table_row )
+{
+  const toml::basic_value<C, M, V>& toml_table_row_mesh =
+    toml::find<toml::table>( toml_table_row, "mesh" );
+  auto topology_str =
+    toml::find<std::string>( toml_table_row_mesh, "topology" );
+
+  if ( topology_str != "single_block" )
+  {
+    error( "Only single block topology supported for now." );
+  }
+
+  auto topology = read_single_block_topology( toml_table_row_mesh );
+
+  return { std::move( topology ) };
+}
 
 /// read csv_file from toml file
 template<typename C,
@@ -102,7 +173,9 @@ read_row( const auto& toml_table_row )
     error( "Bladed rows not yet implemented." );
   }
 
-  return { std::move( name ), nPassage, std::move( blade ) };
+  auto mesh = read_mesh( toml_table_row );
+
+  return { std::move( name ), nPassage, std::move( blade ), std::move( mesh ) };
 }
 
 /// read rows from toml file
@@ -137,9 +210,9 @@ template<typename C,
          class M,
          template<typename...>
          class V>
-geometry_t
-read_geometry( const toml::basic_value<C, M, V>& toml_root,
-               const std::filesystem::path& cwd )
+setup_t
+read_setup( const toml::basic_value<C, M, V>& toml_root,
+            const std::filesystem::path& cwd )
 {
   auto hub = read_hub_shroud( toml_root, "hub", cwd );
   auto shroud = read_hub_shroud( toml_root, "shroud", cwd );
@@ -173,7 +246,7 @@ read_input_toml( const std::string& input_file )
 
   const auto toml_root = toml::parse( input_file );
 
-  auto geometry = read_geometry( toml_root, cwd );
+  auto geometry = read_setup( toml_root, cwd );
 
   return { std::move( geometry ) };
 }

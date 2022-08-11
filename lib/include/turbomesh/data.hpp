@@ -12,6 +12,35 @@
 namespace turbomesh
 {
 
+struct equidistant_clustering_t
+{
+};
+
+/// variant containing all available clustering options
+using clustering_option_t = std::variant<equidistant_clustering_t>;
+
+/// edge clustering properties
+struct edge_clustering_t
+{
+
+  unsigned nPoint;
+  clustering_option_t clustering;
+};
+
+struct single_block_topology_t
+{
+  edge_clustering_t axial;
+  edge_clustering_t radial;
+  edge_clustering_t azimuth;
+};
+
+using topology_t = std::variant<single_block_topology_t>;
+
+struct mesh_t
+{
+  topology_t topology;
+};
+
 struct csv_file_t
 {
   std::string name;
@@ -40,6 +69,7 @@ struct row_t
   std::string name;
   unsigned nPassage;
   std::optional<blade_t> blade_opt;
+  mesh_t mesh;
 };
 
 struct hub_shroud_t
@@ -48,7 +78,7 @@ struct hub_shroud_t
   std::vector<cylindrical_vector3d> points;
 };
 
-struct geometry_t
+struct setup_t
 {
   hub_shroud_t hub;
   hub_shroud_t shroud;
@@ -58,7 +88,7 @@ struct geometry_t
 /// main data structure containing all turbomesh data
 struct data_t
 {
-  geometry_t geometry;
+  setup_t setup;
 };
 
 } // namespace turbomesh
